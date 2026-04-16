@@ -21,7 +21,7 @@ service RiskManagementService
         { grant: [ 'READ' ], to: [ 'RiskViewer' ] },
         { grant: [ '*' ],    to: [ 'RiskManager' ] }
     ]);
-
+// changes made for testing commit.
     @readonly
     entity BusinessPartners as projection on external.A_BusinessPartner {
         key BusinessPartner,
