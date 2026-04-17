@@ -1,0 +1,19 @@
+{
+  "welcomeFile": "/index.html",
+  "authenticationMethod": "route",
+  "routes": [
+    {
+      "source": "^/service/(.*)$",
+      "target": "/service/$1",
+      "destination": "srv-api",
+      "authenticationType": "xsuaa"
+    },
+    {
+      "source": "^/(.*)$",
+      "target": "$1",
+      "localDir": "riskmanagement.risks/webapp",
+      "authenticationType": "xsuaa",
+      "cacheControl": "no-cache"
+    }
+  ]
+}

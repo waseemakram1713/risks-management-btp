@@ -1,0 +1,81 @@
+_schema-version: '3.1'
+ID: RiskManagement
+version: 1.0.0
+description: A simple CAP project.
+parameters:
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npm install
+        - ./node_modules/.bin/cds build --production
+
+modules:
+  # 1. Database Deployer
+  - name: RiskManagement-db-deployer
+    type: hdb
+    path: gen/db
+    parameters:
+      buildpack: nodejs_buildpack
+    requires:
+      - name: RiskManagement-service-db
+
+  # 2. Service Layer
+  - name: RiskManagement-srv
+    type: nodejs
+    path: gen/srv
+    parameters:
+      memory: 256MB
+    provides:
+      - name: srv-api
+        properties:
+          srv-url: ${default-url}
+    requires:
+      - name: RiskManagement-service-uaa
+      - name: RiskManagement-service-db
+      - name: RiskManagement-service-destination
+      - name: RiskManagement-service-connectivity
+
+  # 3. App Router (The Entry Point)
+  - name: RiskManagement-approuter
+    type: approuter.nodejs
+    path: app
+    parameters:
+      keep-existing-routes: true
+      disk-quota: 512M
+      memory: 256M
+    requires:
+      - name: RiskManagement-service-uaa
+      - name: RiskManagement-service-destination
+      - name: srv-api
+        group: destinations
+        properties:
+          name: srv-api
+          url: "~{srv-url}"
+          forwardAuthToken: true
+
+resources:
+  # UAA Service
+  - name: RiskManagement-service-uaa
+    type: org.cloudfoundry.existing-service
+    parameters:
+      service-name: RiskManagement-uaa
+
+  # HANA Service
+  - name: RiskManagement-service-db
+    type: org.cloudfoundry.existing-service
+    parameters:
+      service-name: RiskManagement-db
+
+  # Destination Service
+  - name: RiskManagement-service-destination
+    type: org.cloudfoundry.existing-service
+    parameters:
+      service-name: RiskManagement-destination
+
+  # Connectivity Service
+  - name: RiskManagement-service-connectivity
+    type: org.cloudfoundry.existing-service
+    parameters:
+      service-name: RiskManagement-connectivity

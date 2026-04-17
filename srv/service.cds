@@ -7,7 +7,7 @@ service RiskManagementService
     @cds.redirection.target
     @odata.draft.enabled
     // 1. Apply restrictions to Risks
-    entity Risks as projection on my.Risks
+    entity Risks as projection on my.Risks;
     annotate Risks with @(restrict: [
         { grant: [ 'READ' ], to: [ 'RiskViewer' ] },
         { grant: [ '*' ],    to: [ 'RiskManager' ] }
@@ -16,7 +16,7 @@ service RiskManagementService
     @cds.redirection.target
     @odata.draft.enabled
     // 2. Apply restrictions to Mitigations
-    entity Mitigations as projection on my.Mitigations
+    entity Mitigations as projection on my.Mitigations;
     annotate Mitigations with @(restrict: [
         { grant: [ 'READ' ], to: [ 'RiskViewer' ] },
         { grant: [ '*' ],    to: [ 'RiskManager' ] }
