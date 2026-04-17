@@ -9,6 +9,7 @@
     "@sap-cloud-sdk/util": "^4.6.0",
     "@sap/cds": "^9",
     "@sap/low-code-event-handler": "^1.2.5",
+    "@sap/mdk-tools": "^1.15.0",
     "@sap/xsenv": ">=3.3.2 <3.3.3",
     "@sap/xssec": "^4.13.0",
     "hdb": "^2.27.1",
